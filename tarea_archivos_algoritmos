@@ -1,0 +1,82 @@
+#programa que permite a los usuarios llevar un registro de tareas pendientes
+#función agregar tarea
+#lista tareas
+#marcar la tarea como completada, lo cual eliminara la tarea de la lista
+#guardar y cargar datos, se dividen las tareas pendientes y completadas en 
+#archivos de texto separadas
+
+import os
+def archivo_disponible (tareas_archivo):
+    tareas =[]
+    if os.path.exists(tareas_archivo):
+        with open(tareas_archivo, 'r') as archivo:
+            for linea in archivo:
+                titulo, descripcion = linea.strip().split('|')
+                tarea = {"titulo": titulo, "descripcion": descripcion}
+                tareas.append(tarea)
+    return tareas
+
+def guardar(tareas, tareas_archivo):
+    with open(tareas_archivo, "w") as archivo:
+        for tarea in tareas:
+            archivo.write(f"{tarea['titulo']}|{tarea['descripcion']}\n")
+
+def nueva_tarea():
+    titulo = input("Ingrese El titulo de la tarea: ")
+    descripcion = input("Ingrese la descripción de la tarea: ")
+    tarea = {"titulo": titulo, "descripcion": descripcion}
+    tareas_pendientes.append(tarea)
+    print("La tarea se agrego!")
+
+def lista():
+    if not tareas_pendientes:
+        print("No hay tareas pendientes")
+    else:
+        print("Tiene las siguientes tareas pendientes: ")
+        for i, tarea in enumerate(tareas_pendientes, start=1):
+            print(f"{i}.titulo: {tarea['titulo']}")
+            print(f"descripcion: {tarea['descripcion']}")
+            print()
+
+def tarea_completada():
+    lista()
+    if tareas_pendientes:
+        indice = int(input("Ingrese el número de la tarea completada: ")) -1
+        if 0 <= indice < len(tareas_pendientes):
+            tarea_completada= tareas_pendientes.pop(indice)
+            tareas_completadas.append(tarea_completada)
+            print(f"Tarea '{tarea_completada['titulo']}' fue completada")
+        else:
+            print("No es valido el no de la tarea ingresada")
+    else:
+        print("No hay tareas pendientes")
+
+
+archivo_tareas_pendientes ="tareas_pendientes.txt"
+archivo_tareas_completadas = "tareas_completadas.txt"
+tareas_pendientes = archivo_disponible(archivo_tareas_pendientes)
+tareas_completadas = archivo_disponible(archivo_tareas_completadas)
+
+
+#bloque principal
+while True:
+    print("Bienvenidx ¿cual accion desea realizar?")
+    print("1. Agregar una nueva Tarea")
+    print("2. Mostrar la lista de Tareas pendientes")
+    print("3. Marcar como completada una tarea")
+    print("4. Salir del programa")
+
+    opcion = input("Digite la opción: ")
+
+    if opcion == "1":
+        nueva_tarea()
+    elif opcion == "2":
+        lista()
+    elif opcion == "3":
+        tarea_completada()
+    elif opcion == "4":
+        guardar(tareas_pendientes, archivo_tareas_pendientes)
+        guardar(tareas_completadas, archivo_tareas_completadas)
+        break
+    else: 
+        print("Digite una opcion valida porfavor...")
